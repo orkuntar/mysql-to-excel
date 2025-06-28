@@ -1,0 +1,19 @@
+{
+  "name": "mssql-to-sheets",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@google-cloud/local-auth": "^3.0.1",
+    "dotenv": "^16.5.0",
+    "fs": "^0.0.1-security",
+    "googleapis": "^118.0.0",
+    "mssql": "^11.0.1"
+  }
+}

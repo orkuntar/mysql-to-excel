@@ -21,17 +21,16 @@ const sqlConfig = {
   requestTimeout: 160000,
 };
 
-// 🔄 Takip edilen gün
 let currentDay = new Date().getDate();
 
-// 📅 Bugünün 00:00 UTC timestamp'inden itibaren verileri çeken SQL
+// Query buraya
 function buildQuery() {
   return `
     
   `;
 }
 
-// Retry mekanizması
+// Retry 
 async function retryOperation(operation, maxRetries = 5) {
   let retries = 0;
   while (retries < maxRetries) {
@@ -41,11 +40,11 @@ async function retryOperation(operation, maxRetries = 5) {
       console.warn(`⚠️ Hata: ${error.message}`);
       retries++;
       const delay = Math.pow(2, retries) * 1000;
-      console.log(`🔁 Yeniden deneniyor ${delay / 1000}sn sonra... (${retries}/${maxRetries})`);
+      console.log(`Yeniden deneniyor ${delay / 1000}sn sonra... (${retries}/${maxRetries})`);
       await new Promise(res => setTimeout(res, delay));
     }
   }
-  throw new Error('🚫 Maksimum tekrar hakkı aşıldı.');
+  throw new Error(' Maksimum tekrar hakkı aşıldı.');
 }
 
 // Mevcut chat_id'leri al
@@ -59,9 +58,9 @@ async function getExistingChatIds(sheets) {
   });
 }
 
-// Başlık kontrolü
+// Kolon isimleri headers'a ekle
 async function ensureSheetSetup(sheets) {
-  const headers = ['created_at', 'email', 'chat_id', 'Puan', 'Yorum', 'Reason'];
+  const headers = ['', '', '', '', '', ''];
   return retryOperation(async () => {
     const res = await sheets.spreadsheets.values.get({
       spreadsheetId: SHEET_ID,
@@ -75,7 +74,7 @@ async function ensureSheetSetup(sheets) {
         valueInputOption: 'RAW',
         resource: { values: [headers] },
       });
-      console.log('📋 Başlıklar oluşturuldu.');
+      console.log('Başlıklar oluşturuldu.');
     }
   });
 }
@@ -111,9 +110,9 @@ async function insertRowsAndWrite(sheets, rowsData) {
       resource: { values: rowsData },
     });
 
-    console.log(`✅ ${rowsData.length} satır Google Sheets'e eklendi.`);
+    console.log(`${rowsData.length} satır Google Sheets'e eklendi.`);
     rowsData.forEach(row => {
-      console.log(`📅 ${row[0]} | 🧑 ${row[1]} | 💬 ${row[5]} | 🆔 ${row[2]}`);
+      console.log(`${row[0]} |  ${row[1]} |  ${row[5]} |  ${row[2]}`);
     });
   });
 }
@@ -131,10 +130,10 @@ async function runJob() {
 
     await ensureSheetSetup(sheets);
 
-    // Yeni güne geçildiyse Sheet1 temizlenir
+    // Yeni güne geçildiyse Sheet1 temizle
     const today = new Date().getDate();
     if (today !== currentDay) {
-      console.log('📆 Yeni gün algılandı. Sheet1 temizleniyor...');
+      console.log('Yeni gün algılandı. Sheet1 temizleniyor...');
       await sheets.spreadsheets.values.clear({
         spreadsheetId: SHEET_ID,
         range: `${SHEET_NAME}!A2:F1000000`,
@@ -154,10 +153,7 @@ async function runJob() {
         const rowData = [
           row.created_at.slice(0, 16),
           row.email || '',
-          row.chat_id || '',
-          row.Puan || '',
-          row.Yorum || '',
-          row.Reason || ''
+         //gibi
         ];
         newRows.push(rowData);
         existingChatIds.add(row.chat_id);
@@ -165,9 +161,9 @@ async function runJob() {
     }
 
     await insertRowsAndWrite(sheets, newRows);
-    console.log(`📦 Toplam ${newRows.length} yeni veri işlendi.`);
+    console.log(` Toplam ${newRows.length} yeni veri işlendi.`);
   } catch (err) {
-    console.error('❌ runJob hatası:', err.message);
+    console.error(' runJob hatası:', err.message);
   } finally {
     sql.close();
   }

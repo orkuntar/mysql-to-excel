@@ -7,7 +7,6 @@ const SHEET_ID = process.env.SHEET_ID;
 const SHEET_NAME = 'Sayfa1';
 const SHEET_RANGE = `${SHEET_NAME}!A1`;
 
-// MSSQL bağlantı konfigürasyonu
 const sqlConfig = {
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
